@@ -1,5 +1,6 @@
 package com.genial.demo.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,10 +23,14 @@ public class Storage {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_block")
-    private Block block;
+    @JoinColumn(name = "id_user")
+    private User user;
 
+    @Column(unique = true)
     private String name;
+
     private String description;
+
+    
 
 }

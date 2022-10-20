@@ -27,9 +27,6 @@ public class User {
 
     private UUID uuid;
 
-    @OneToMany(mappedBy = "user")
-    private List<Block> blockList = new ArrayList<Block>();
-
     @Column(unique = true)
     private String email;
 
