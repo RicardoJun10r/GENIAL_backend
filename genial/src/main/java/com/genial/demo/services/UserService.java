@@ -30,9 +30,7 @@ public class UserService {
     public User currentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getPrincipal().toString();
-
         User user = repository.findByEmail(email);
-
         return user;
     }
 
@@ -80,7 +78,8 @@ public class UserService {
         }
 
         user.get().setName(dto.getName());
-        user.get().setPassword(dto.getPassword());
+        String pass = (new BCryptPasswordEncoder()).encode(dto.getPassword());
+        user.get().setPassword(pass);
     
         return Optional.of(mapper.map(repository.save(user.get()), UserDto.class));
     }

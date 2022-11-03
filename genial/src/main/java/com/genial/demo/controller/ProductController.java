@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.genial.demo.DTO.ProductDto;
 import com.genial.demo.entity.Product;
 import com.genial.demo.repositories.ProductRepository;
 import com.genial.demo.services.ProductService;
@@ -26,14 +28,19 @@ public class ProductController {
     ProductService service;
 
     @GetMapping("/search/byName")
-    public Product getByName(@Param("name") String name){
+    public ProductDto getByName(@Param("name") String name){
         return service.findByName(name);
     }
 
+    //@GetMapping
+    //public List<ProductDto> findAll() {
+    //    return service.findAll();
+    //}
+
    @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product dto){
+    public ResponseEntity<ProductDto> save(@RequestBody Product dto){
         
-        Product product = service.save(dto);
+        ProductDto product = service.save(dto);
 
         if(product == null){
             return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
@@ -59,6 +66,16 @@ public class ProductController {
 
         }
         
+    }
+
+    @PutMapping("/{name}")
+    public ResponseEntity<ProductDto> update(@PathVariable String name, @RequestBody ProductDto dto) {
+        ProductDto storage = service.update(name, dto);
+        if (storage != null){
+            return ResponseEntity.ok(storage);
+        }else{
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
