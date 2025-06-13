@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.genial.demo.DTO.CreateUserRequest;
 import com.genial.demo.DTO.UserDto;
+import com.genial.demo.DTO.UserLoginRequest;
 import com.genial.demo.DTO.UserUpdateData;
 import com.genial.demo.services.UserService;
 
@@ -30,7 +31,12 @@ public class UserController {
         return userService.findByEmail(email);
     }
 
-    @PostMapping
+    @PostMapping("/login")
+    public ResponseEntity<UserDto> login(@RequestBody UserLoginRequest dto) {
+        return ResponseEntity.ok().body(userService.login(dto));
+    }
+
+    @PostMapping("/registrar")
     public ResponseEntity<UserDto> save(@RequestBody CreateUserRequest dto) {
         return ResponseEntity.ok().body(userService.saveUser(dto));
     }

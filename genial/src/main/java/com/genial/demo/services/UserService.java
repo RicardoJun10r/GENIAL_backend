@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.genial.demo.DTO.CreateUserRequest;
 
 import com.genial.demo.DTO.UserDto;
+import com.genial.demo.DTO.UserLoginRequest;
 import com.genial.demo.DTO.UserUpdateData;
 import com.genial.demo.entity.User;
 import com.genial.demo.repositories.UserRepository;
@@ -23,6 +24,17 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final ModelMapper mapper;
+
+    public UserDto login(UserLoginRequest dto) {
+        Optional<User> user = this.userRepository.findByEmail(dto.email());
+        if (user.isPresent()) {
+            if (user.get().getPassword().equals(dto.password())) {
+                return this.mapper.map(user.get(), UserDto.class);
+            }
+            throw new RuntimeException("Erro");
+        }
+        throw new RuntimeException("Erro");
+    }
 
     @Transactional
     public UserDto saveUser(CreateUserRequest user) {
