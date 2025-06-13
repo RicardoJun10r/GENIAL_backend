@@ -1,29 +1,31 @@
 package com.genial.demo.entity;
 
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tb_product")
+@Table(name = "PRODUTOS")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "id_storage")
@@ -32,15 +34,21 @@ public class Product {
     private String name;
     private String description;
     private String sector;
-    private Float value;
-    private Date date;  // data que o produto foi cadatrado 
-    private int quantidade; // quantidade de produto no estoque
+    private Double value;
+    private LocalDate date;
+    private Integer quantidade;
 
-    // gerar data automaticamente cada vez que se cadastra um produto
-    public Product(){
-        GregorianCalendar gc=new GregorianCalendar(); 
-        date =gc.getTime(); //"Pega" a data do GregorianCalendar para uma variável Date
-        gc.setTime(date); //Armazena a data de d1 para o GregorianCalendar gc.
+    @PrePersist
+    void onCreate() {
+        this.date = LocalDate.now();
     }
-    
+
+    public Product(String name, String description, String sector, Double value, Integer quantidade) {
+        this.name = name;
+        this.description = description;
+        this.sector = sector;
+        this.value = value;
+        this.quantidade = quantidade;
+    }
+
 }

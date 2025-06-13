@@ -1,8 +1,5 @@
 package com.genial.demo.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,71 +8,48 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.genial.demo.DTO.ProductDto;
-import com.genial.demo.entity.Product;
-import com.genial.demo.repositories.ProductRepository;
+import com.genial.demo.DTO.ProductCreate;
+import com.genial.demo.DTO.ProductNestedResponse;
+import com.genial.demo.DTO.ProductResponse;
+import com.genial.demo.DTO.ProductUpdate;
 import com.genial.demo.services.ProductService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/produtos")
+@RequiredArgsConstructor
 public class ProductController {
-    
-    @Autowired
-    ProductRepository repository;
-    @Autowired
-    ProductService service;
 
-    @GetMapping("/search/byName")
-    public ProductDto getByName(@Param("name") String name){
-        return service.findByName(name);
+    private final ProductService productService;
+
+    @GetMapping("/buscar")
+    public ResponseEntity<ProductNestedResponse> getByName(@RequestParam("id") String id) {
+        return ResponseEntity.ok().body(productService.findById(id));
     }
 
-    //@GetMapping
-    //public List<ProductDto> findAll() {
-    //    return service.findAll();
-    //}
+    @PostMapping("/{id_storage}")
+    public ResponseEntity<ProductResponse> addProductOnStorage(@PathVariable String id_storage,
+            @RequestBody ProductCreate product) {
 
-   @PostMapping
-    public ResponseEntity<ProductDto> save(@RequestBody Product dto){
-        
-        ProductDto product = service.save(dto);
+        return ResponseEntity.ok().body(productService.addProductOnStorage(id_storage, product));
 
-        if(product == null){
-            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return new ResponseEntity<>(product,HttpStatus.CREATED);
-        
     }
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<String> delete(@PathVariable String name){
-        
-        Product product = new Product();
-        product.setName(name);
-        
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id) {
 
-        try {
-            service.delete(product);
-            return new ResponseEntity<>(name,HttpStatus.OK);
+        productService.delete(id);
+        return ResponseEntity.ok().body("Deletado!");
 
-        } catch (Exception e) {
-            return new ResponseEntity<>("",HttpStatus.NOT_FOUND);
-
-        }
-        
     }
 
-    @PutMapping("/{name}")
-    public ResponseEntity<ProductDto> update(@PathVariable String name, @RequestBody ProductDto dto) {
-        ProductDto storage = service.update(name, dto);
-        if (storage != null){
-            return ResponseEntity.ok(storage);
-        }else{
-            return ResponseEntity.badRequest().build();
-        }
+    @PutMapping("/atualizar")
+    public ResponseEntity<ProductResponse> update(@RequestBody ProductUpdate dto) {
+        return ResponseEntity.ok().body(productService.update(dto));
     }
 
 }

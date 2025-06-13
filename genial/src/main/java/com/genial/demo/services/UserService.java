@@ -1,87 +1,84 @@
 package com.genial.demo.services;
 
-
 import java.util.Optional;
-import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
+
 import org.springframework.transaction.annotation.Transactional;
 
-import com.genial.demo.DTO.UserCreateDto;
+import com.genial.demo.DTO.CreateUserRequest;
+
 import com.genial.demo.DTO.UserDto;
+import com.genial.demo.DTO.UserUpdateData;
 import com.genial.demo.entity.User;
 import com.genial.demo.repositories.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    
-    @Autowired
-    private UserRepository repository;
-    @Autowired
-    private ModelMapper mapper;
 
+    private final UserRepository userRepository;
 
-    public User currentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getPrincipal().toString();
-        User user = repository.findByEmail(email);
-        return user;
-    }
+    private final ModelMapper mapper;
 
-    public UserDto findByEmail(String email){
-        User user = repository.findByEmail(email);
-        UserDto dto = mapper.map(user,UserDto.class);
-        return dto;
-    }
-
-    public UserCreateDto findUserByEmail(String email) {
-		User user = repository.findByEmail(email);
-		UserCreateDto dto = mapper.map(user, UserCreateDto.class);
-		return dto;
-	}
-
-    public Optional<UserDto> findByUuid(String uuid){
-        Optional<User> user = repository.findByUuid(UUID.fromString(uuid));
-        if (user.isEmpty()) {
-            return Optional.empty();
+    @Transactional
+    public UserDto saveUser(CreateUserRequest user) {
+        Optional<User> novo_usuario = this.userRepository.findByEmail(user.email());
+        if (!novo_usuario.isPresent()) {
+            return mapper.map(this.userRepository.save(new User(user.email(), user.name(), user.password())),
+                    UserDto.class);
         }
-        return Optional.of(mapper.map(user.get(),UserDto.class));
+        throw new RuntimeException("Erro");
     }
 
-    @Transactional(propagation=Propagation.REQUIRED,readOnly=false)
-    public UserDto save(User dto){
-        User user = new User();
-        
-        user.setEmail(dto.getEmail());
-        user.setName(dto.getName());
-        String pass = (new BCryptPasswordEncoder()).encode(dto.getPassword());
-        user.setPassword(pass);
-
-        return mapper.map(repository.save(user), UserDto.class);
-    }
-
-    @Transactional(propagation=Propagation.REQUIRED,readOnly=false)
-    public void delete (UserDto dto){
-        repository.deleteByEmail(dto.getEmail());
-    }
-
-    public Optional<UserDto> update(String uuid, UserCreateDto dto) {
-        Optional<User> user = repository.findByUuid(UUID.fromString(uuid));
-        if (user.isEmpty()) {
-          return Optional.empty();
+    @Transactional(readOnly = true)
+    public UserDto findByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return mapper.map(user, UserDto.class);
         }
+        throw new RuntimeException("Erro");
+    }
 
-        user.get().setName(dto.getName());
-        String pass = (new BCryptPasswordEncoder()).encode(dto.getPassword());
-        user.get().setPassword(pass);
-    
-        return Optional.of(mapper.map(repository.save(user.get()), UserDto.class));
+    @Transactional(readOnly = true)
+    public UserDto findByUuid(String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return mapper.map(user.get(), UserDto.class);
+        }
+        throw new RuntimeException("Erro");
+
+    }
+
+    @Transactional
+    public void delete(String email) {
+        Optional<User> user = this.userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            this.userRepository.deleteByEmail(user.get().getEmail());
+        }
+    }
+
+    @Transactional
+    public UserDto update(UserUpdateData dto) {
+        Optional<User> user = userRepository.findByEmail(dto.email());
+
+        if (user.isPresent()) {
+            User usuario_atualizado = user.get();
+            if (!dto.email().isEmpty() && !dto.email().isBlank()) {
+                usuario_atualizado.setEmail(dto.email());
+            }
+            if (!dto.name().isEmpty() && !dto.name().isBlank()) {
+                usuario_atualizado.setName(dto.name());
+            }
+            if (!dto.password().isEmpty() && !dto.password().isBlank()) {
+                usuario_atualizado.setPassword(dto.password());
+            }
+            return mapper.map(userRepository.save(user.get()), UserDto.class);
+        }
+        throw new RuntimeException("Erro");
     }
 
 }

@@ -1,56 +1,95 @@
 package com.genial.demo.services;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.genial.demo.DTO.ProductDto;
+import com.genial.demo.DTO.ProductCreate;
+import com.genial.demo.DTO.ProductNestedResponse;
+import com.genial.demo.DTO.ProductResponse;
+import com.genial.demo.DTO.ProductUpdate;
+import com.genial.demo.DTO.StorageResponse;
 import com.genial.demo.entity.Product;
+import com.genial.demo.entity.Storage;
 import com.genial.demo.repositories.ProductRepository;
+import com.genial.demo.repositories.StorageRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
-    
-    @Autowired
-    private ProductRepository repository;
-    @Autowired
-    private ModelMapper mapper;
-  
-    public ProductDto findByName(String Name){
-        Product product = repository.findByName(Name);
-        ProductDto dto = mapper.map(product, ProductDto.class);
-        return dto;
+
+    private final ProductRepository productRepository;
+
+    private final StorageRepository storageRepository;
+
+    private final ModelMapper mapper;
+
+    @Transactional
+    public ProductResponse addProductOnStorage(String id_storage, ProductCreate product) {
+        Optional<Storage> storage = this.storageRepository.findById(id_storage);
+        if (storage.isPresent()) {
+            Product novo_produto = new Product(product.name(), product.description(), product.sector(), product.value(),
+                    product.quantidade());
+            novo_produto.setStorage(storage.get());
+            storage.get().getProducts().add(this.productRepository.save(novo_produto));
+            this.storageRepository.save(storage.get());
+            return new ProductResponse(
+                    novo_produto.getId(), novo_produto.getName(), novo_produto.getDescription(),
+                    novo_produto.getSector(), novo_produto.getValue(), novo_produto.getDate(),
+                    novo_produto.getQuantidade());
+        }
+        throw new RuntimeException("Erro");
     }
 
-    @Transactional(propagation=Propagation.REQUIRED,readOnly=false)
-    public ProductDto save(Product dto){
-        Product product = new Product();
-        product = mapper.map(dto,Product.class);
-        return mapper.map(repository.save(product), ProductDto.class);
+    @Transactional(readOnly = true)
+    public ProductNestedResponse findById(String id) {
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()) {
+            return new ProductNestedResponse(
+                    product.get().getId(), mapper.map(product.get().getStorage(), StorageResponse.class),
+                    product.get().getName(), product.get().getDescription(), product.get().getSector(),
+                    product.get().getValue(), product.get().getDate(), product.get().getQuantidade());
+        }
+        throw new RuntimeException("Erro");
     }
 
-    @Transactional(propagation=Propagation.REQUIRED,readOnly=false)
-    public void delete (Product dto){
-        repository.deleteByName(dto.getName());
+    public void delete(String id) {
+        productRepository.deleteById(id);
     }
-    
 
-    @Transactional(propagation=Propagation.REQUIRED, readOnly=false)
-    public ProductDto update(String name, ProductDto dto) {
-        Product product = repository.findByName(name);
-        if (product == null) {
-          return null;
+    @Transactional
+    public ProductResponse update(ProductUpdate dto) {
+        Product productToUpdate = productRepository.findById(dto.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com o ID: " + dto.id()));
+
+        if (dto.name() != null && !dto.name().isBlank()) {
+            productToUpdate.setName(dto.name());
         }
 
-        product.setName(dto.getName());
-        product.setDescription(dto.getDescription());
-        product.setQuantidade(dto.getQuantidade());
-        product.setSector(dto.getSector());
-        product.setValue(dto.getValue());
-    
-        return mapper.map(repository.save(product), ProductDto.class);
+        if (dto.description() != null && !dto.description().isBlank()) {
+            productToUpdate.setDescription(dto.description());
+        }
+
+        if (dto.sector() != null && !dto.sector().isBlank()) {
+            productToUpdate.setSector(dto.sector());
+        }
+
+        if (dto.value() != null) {
+            productToUpdate.setValue(dto.value());
+        }
+
+        if (dto.quantidade() != null) {
+            productToUpdate.setQuantidade(dto.quantidade());
+        }
+
+        Product updatedProduct = productRepository.save(productToUpdate);
+
+        return mapper.map(updatedProduct, ProductResponse.class);
     }
 
 }

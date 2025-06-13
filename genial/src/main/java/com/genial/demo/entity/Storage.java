@@ -3,41 +3,47 @@ package com.genial.demo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tb_storage")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "STORAGE")
 public class Storage {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
-    @OneToMany(mappedBy = "storage")
-    private List<Product> productList = new ArrayList<Product>();
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    private String name;
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
 
-    @Column(unique = true)
-    private String name;
+    @OneToMany(mappedBy = "storage", fetch = FetchType.LAZY)
+    private List<Product> products;
 
-    private String description;
-
-    
+    public Storage(String name, String description) {
+        this.name = name;
+        this.description = description;
+        this.user = null;
+        this.products = new ArrayList<Product>();
+    }
 
 }

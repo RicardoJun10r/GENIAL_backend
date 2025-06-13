@@ -1,43 +1,45 @@
 package com.genial.demo.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name="tb_users")
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "USUARIOS")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private UUID uuid;
-
-    @OneToMany(mappedBy = "user")
-    private List<Storage> storageList = new ArrayList<Storage>();
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(unique = true)
     private String email;
-
     private String name;
     private String password;
 
-    public User() {
-        uuid = UUID.randomUUID();
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<Storage> storages = new HashSet<Storage>();
+
+    public User(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
     }
 
 }

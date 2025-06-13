@@ -1,14 +1,12 @@
 package com.genial.demo.DTO;
-import java.util.UUID;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-public class UserDto {
-    
-    private UUID uuid;
-    private String email;
-    private String name;
+import java.util.List;
 
+import com.genial.demo.entity.Storage;
+
+public record UserDto(
+                String id,
+                String email,
+                String name,
+                List<Storage> storages) {
 }
