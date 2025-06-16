@@ -2,8 +2,6 @@ package com.genial.demo.DTO;
 
 import java.util.List;
 
-import com.genial.demo.entity.Product;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,9 +16,9 @@ public class StorageResponse {
         private String id;
         private String name;
         private String description;
-        private List<Product> products;
+        private List<ProductResponse> products;
 
-        public StorageResponse(String name, String description, List<Product> products, UserResponse user) {
+        public StorageResponse(String name, String description, List<ProductResponse> products, UserResponse user) {
                 this.name = name;
                 this.description = description;
                 this.products = products;

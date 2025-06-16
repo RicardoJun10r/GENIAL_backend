@@ -1,6 +1,7 @@
 package com.genial.demo.services;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.genial.demo.DTO.StorageCreate;
 import com.genial.demo.DTO.StorageResponse;
+import com.genial.demo.DTO.ProductResponse;
 import com.genial.demo.DTO.StorageUpdate;
 import com.genial.demo.DTO.UserResponse;
 import com.genial.demo.entity.Storage;
@@ -38,7 +40,9 @@ public class StorageService {
             this.userRepository.save(user.get());
             return new StorageResponse(
                     novo_storage.getName(),
-                    novo_storage.getDescription(), novo_storage.getProducts(),
+                    novo_storage.getDescription(),
+                    novo_storage.getProducts().stream().map(p -> this.mapper.map(p, ProductResponse.class))
+                            .collect(Collectors.toList()),
                     mapper.map(novo_storage.getUser(), UserResponse.class));
         }
         throw new RuntimeException("Erro");

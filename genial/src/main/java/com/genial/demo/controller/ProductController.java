@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.genial.demo.DTO.ProductCreate;
-import com.genial.demo.DTO.ProductNestedResponse;
 import com.genial.demo.DTO.ProductResponse;
 import com.genial.demo.DTO.ProductUpdate;
 import com.genial.demo.services.ProductService;
@@ -27,7 +26,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/buscar")
-    public ResponseEntity<ProductNestedResponse> getByName(@RequestParam("id") String id) {
+    public ResponseEntity<ProductResponse> getById(@RequestParam("id") String id) {
         return ResponseEntity.ok().body(productService.findById(id));
     }
 

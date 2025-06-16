@@ -8,10 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.genial.demo.DTO.ProductCreate;
-import com.genial.demo.DTO.ProductNestedResponse;
 import com.genial.demo.DTO.ProductResponse;
 import com.genial.demo.DTO.ProductUpdate;
-import com.genial.demo.DTO.StorageResponse;
 import com.genial.demo.entity.Product;
 import com.genial.demo.entity.Storage;
 import com.genial.demo.repositories.ProductRepository;
@@ -47,11 +45,11 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public ProductNestedResponse findById(String id) {
+    public ProductResponse findById(String id) {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()) {
-            return new ProductNestedResponse(
-                    product.get().getId(), mapper.map(product.get().getStorage(), StorageResponse.class),
+            return new ProductResponse(
+                    product.get().getId(),
                     product.get().getName(), product.get().getDescription(), product.get().getSector(),
                     product.get().getValue(), product.get().getDate(), product.get().getQuantidade());
         }
