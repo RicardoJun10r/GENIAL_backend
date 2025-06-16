@@ -2,6 +2,8 @@ package com.genial.demo.DTO;
 
 import java.util.List;
 
+import com.genial.demo.entity.Product;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
-    private String id;
-    private String email;
+public class StorageDto {
     private String name;
-    private List<StorageDto> storages;
+    private String description;
+    private List<Product> products;
 }

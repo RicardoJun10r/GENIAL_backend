@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,7 +35,12 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<Storage> storages = new HashSet<Storage>();
+    private Set<Storage> storages;
+
+    @PrePersist
+    void onCreate() {
+        this.storages = new HashSet<>();
+    }
 
     public User(String email, String name, String password) {
         this.email = email;

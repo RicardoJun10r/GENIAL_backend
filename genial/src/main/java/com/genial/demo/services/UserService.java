@@ -31,9 +31,9 @@ public class UserService {
             if (user.get().getPassword().equals(dto.password())) {
                 return this.mapper.map(user.get(), UserDto.class);
             }
-            throw new RuntimeException("Erro");
+            throw new RuntimeException("Erro: credenciais erradas");
         }
-        throw new RuntimeException("Erro");
+        throw new RuntimeException("Erro: Nao achado");
     }
 
     @Transactional
@@ -50,7 +50,15 @@ public class UserService {
     public UserDto findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return mapper.map(user, UserDto.class);
+            UserDto dto = mapper.map(user.get(), UserDto.class);
+            if (dto.getStorages() != null) {
+                dto.getStorages().forEach(s -> {
+                    if (s != null) {
+                        System.out.println(s.getName() + " " + s.getDescription());
+                    }
+                });
+            }
+            return dto;
         }
         throw new RuntimeException("Erro");
     }

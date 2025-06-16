@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.genial.demo.DTO.StorageCreate;
 import com.genial.demo.DTO.StorageResponse;
 import com.genial.demo.DTO.StorageUpdate;
-import com.genial.demo.DTO.UserDto;
+import com.genial.demo.DTO.UserResponse;
 import com.genial.demo.entity.Storage;
 import com.genial.demo.entity.User;
 import com.genial.demo.repositories.StorageRepository;
@@ -39,7 +39,7 @@ public class StorageService {
             return new StorageResponse(
                     novo_storage.getName(),
                     novo_storage.getDescription(), novo_storage.getProducts(),
-                    mapper.map(novo_storage.getUser(), UserDto.class));
+                    mapper.map(novo_storage.getUser(), UserResponse.class));
         }
         throw new RuntimeException("Erro");
     }
@@ -47,7 +47,8 @@ public class StorageService {
     public StorageResponse findByName(String email, String name) {
         Optional<User> user = this.userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return this.mapper.map(user.get().getStorages().stream().filter(s -> s.getName().equals(name)).findFirst(),
+            return this.mapper.map(
+                    user.get().getStorages().stream().filter(s -> s.getName().equals(name)).findFirst().get(),
                     StorageResponse.class);
         }
         throw new RuntimeException("Erro");
