@@ -58,6 +58,14 @@ public class StorageService {
         throw new RuntimeException("Erro");
     }
 
+    public StorageResponse findById(String id) {
+        Optional<Storage> storage = this.storageRepository.findById(id);
+        if (storage.isPresent()) {
+            return this.mapper.map(storage.get(), StorageResponse.class);
+        }
+        throw new RuntimeException("Erro");
+    }
+
     public void delete(String id) {
         this.storageRepository.deleteById(id);
     }

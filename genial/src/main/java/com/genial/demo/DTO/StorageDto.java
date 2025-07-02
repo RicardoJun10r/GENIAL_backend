@@ -12,6 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StorageDto {
+    private String id;
     private String name;
     private String description;
     private List<ProductResponse> products;

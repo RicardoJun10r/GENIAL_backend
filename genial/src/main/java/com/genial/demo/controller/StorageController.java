@@ -36,6 +36,11 @@ public class StorageController {
         return ResponseEntity.ok().body(this.storageService.findByName(email, name));
     }
 
+    @GetMapping("/buscar")
+    public ResponseEntity<StorageResponse> getById(@RequestParam("id") String id) {
+        return ResponseEntity.ok().body(this.storageService.findById(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
         this.storageService.delete(id);
