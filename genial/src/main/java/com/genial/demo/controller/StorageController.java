@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.genial.demo.DTO.StorageCreate;
-import com.genial.demo.DTO.StorageResponse;
-import com.genial.demo.DTO.StorageUpdate;
 import com.genial.demo.services.StorageService;
+import com.genial.demo.shared.StorageCreate;
+import com.genial.demo.shared.StorageResponse;
+import com.genial.demo.shared.StorageUpdate;
 
 import lombok.RequiredArgsConstructor;
 

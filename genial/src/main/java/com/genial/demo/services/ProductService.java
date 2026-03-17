@@ -7,13 +7,13 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.genial.demo.DTO.ProductCreate;
-import com.genial.demo.DTO.ProductResponse;
-import com.genial.demo.DTO.ProductUpdate;
 import com.genial.demo.entity.Product;
 import com.genial.demo.entity.Storage;
 import com.genial.demo.repositories.ProductRepository;
 import com.genial.demo.repositories.StorageRepository;
+import com.genial.demo.shared.ProductCreate;
+import com.genial.demo.shared.ProductResponse;
+import com.genial.demo.shared.ProductUpdate;
 
 import lombok.RequiredArgsConstructor;
 

@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.genial.demo.DTO.CreateUserRequest;
-import com.genial.demo.DTO.UserDto;
-import com.genial.demo.DTO.UserLoginRequest;
-import com.genial.demo.DTO.UserUpdateData;
 import com.genial.demo.services.UserService;
+import com.genial.demo.shared.CreateUserRequest;
+import com.genial.demo.shared.UserDto;
+import com.genial.demo.shared.UserLoginRequest;
+import com.genial.demo.shared.UserUpdateData;
 
 import lombok.RequiredArgsConstructor;
 

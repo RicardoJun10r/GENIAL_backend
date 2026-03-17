@@ -1,4 +1,6 @@
-package com.genial.demo.DTO;
+package com.genial.demo.shared;
+
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,10 +11,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserResponse {
-    
+public class StorageDto {
     private String id;
-    private String email;
     private String name;
-
+    private String description;
+    private List<ProductResponse> products;
 }

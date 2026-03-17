@@ -7,13 +7,12 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import com.genial.demo.DTO.CreateUserRequest;
-
-import com.genial.demo.DTO.UserDto;
-import com.genial.demo.DTO.UserLoginRequest;
-import com.genial.demo.DTO.UserUpdateData;
 import com.genial.demo.entity.User;
 import com.genial.demo.repositories.UserRepository;
+import com.genial.demo.shared.CreateUserRequest;
+import com.genial.demo.shared.UserDto;
+import com.genial.demo.shared.UserLoginRequest;
+import com.genial.demo.shared.UserUpdateData;
 
 import lombok.RequiredArgsConstructor;
 

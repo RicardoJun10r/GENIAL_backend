@@ -1,4 +1,4 @@
-package com.genial.demo.DTO;
+package com.genial.demo.shared;
 
 public record CreateUserRequest(
                 String email,

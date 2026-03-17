@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.genial.demo.DTO.ProductCreate;
-import com.genial.demo.DTO.ProductResponse;
-import com.genial.demo.DTO.ProductUpdate;
 import com.genial.demo.services.ProductService;
+import com.genial.demo.shared.ProductCreate;
+import com.genial.demo.shared.ProductResponse;
+import com.genial.demo.shared.ProductUpdate;
 
 import lombok.RequiredArgsConstructor;
 

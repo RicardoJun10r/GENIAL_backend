@@ -7,15 +7,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.genial.demo.DTO.StorageCreate;
-import com.genial.demo.DTO.StorageResponse;
-import com.genial.demo.DTO.ProductResponse;
-import com.genial.demo.DTO.StorageUpdate;
-import com.genial.demo.DTO.UserResponse;
 import com.genial.demo.entity.Storage;
 import com.genial.demo.entity.User;
 import com.genial.demo.repositories.StorageRepository;
 import com.genial.demo.repositories.UserRepository;
+import com.genial.demo.shared.ProductResponse;
+import com.genial.demo.shared.StorageCreate;
+import com.genial.demo.shared.StorageResponse;
+import com.genial.demo.shared.StorageUpdate;
+import com.genial.demo.shared.UserResponse;
 
 import lombok.RequiredArgsConstructor;
 

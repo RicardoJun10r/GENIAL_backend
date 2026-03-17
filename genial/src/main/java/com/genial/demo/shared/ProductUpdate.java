@@ -1,15 +1,13 @@
-package com.genial.demo.DTO;
+package com.genial.demo.shared;
 
 import java.time.LocalDate;
 
-public record ProductNestedResponse(
+public record ProductUpdate(
         String id,
-        StorageResponse storageResponse,
         String name,
         String description,
         String sector,
         Double value,
         LocalDate date,
         Integer quantidade) {
-
 }
