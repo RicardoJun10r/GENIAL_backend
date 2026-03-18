@@ -1,6 +1,7 @@
 package com.genial.demo.shared;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,9 +22,11 @@ public class ProductResponse {
 
         private String sector;
 
-        private Double value;
+        private BigDecimal value;
 
-        private LocalDate date;
+        private LocalDateTime createdAt;
+
+        private LocalDateTime updatedAt;
 
         private Integer quantidade;
 }

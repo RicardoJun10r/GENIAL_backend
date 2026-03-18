@@ -1,21 +1,17 @@
 package com.genial.demo.services;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.genial.demo.entity.Storage;
-import com.genial.demo.entity.User;
+import com.genial.demo.model.Storage;
+import com.genial.demo.model.User;
 import com.genial.demo.repositories.StorageRepository;
 import com.genial.demo.repositories.UserRepository;
-import com.genial.demo.shared.ProductResponse;
 import com.genial.demo.shared.StorageCreate;
 import com.genial.demo.shared.StorageResponse;
 import com.genial.demo.shared.StorageUpdate;
-import com.genial.demo.shared.UserResponse;
+import com.genial.demo.shared.mapper.StorageMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,23 +23,18 @@ public class StorageService {
 
     private final UserRepository userRepository;
 
-    private final ModelMapper mapper;
+    private final StorageMapper mapper;
 
     @Transactional
     public StorageResponse addStorageOnUser(String id_user, StorageCreate storage) {
         Optional<User> user = this.userRepository.findById(id_user);
         if (user.isPresent()) {
-            Storage novo_storage = new Storage(storage.name(), storage.description());
+            Storage novo_storage = mapper.toEntity(storage);
             novo_storage.setUser(user.get());
-            user.get().getStorages().add(
-                    this.storageRepository.save(novo_storage));
+            Storage savedStorage = this.storageRepository.save(novo_storage);
+            user.get().getStorages().add(savedStorage);
             this.userRepository.save(user.get());
-            return new StorageResponse(
-                    novo_storage.getName(),
-                    novo_storage.getDescription(),
-                    novo_storage.getProducts().stream().map(p -> this.mapper.map(p, ProductResponse.class))
-                            .collect(Collectors.toList()),
-                    mapper.map(novo_storage.getUser(), UserResponse.class));
+            return mapper.toResponse(savedStorage);
         }
         throw new RuntimeException("Erro");
     }
@@ -51,9 +42,8 @@ public class StorageService {
     public StorageResponse findByName(String email, String name) {
         Optional<User> user = this.userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return this.mapper.map(
-                    user.get().getStorages().stream().filter(s -> s.getName().equals(name)).findFirst().get(),
-                    StorageResponse.class);
+            return this.mapper.toResponse(
+                    user.get().getStorages().stream().filter(s -> s.getName().equals(name)).findFirst().get());
         }
         throw new RuntimeException("Erro");
     }
@@ -61,7 +51,7 @@ public class StorageService {
     public StorageResponse findById(String id) {
         Optional<Storage> storage = this.storageRepository.findById(id);
         if (storage.isPresent()) {
-            return this.mapper.map(storage.get(), StorageResponse.class);
+            return this.mapper.toResponse(storage.get());
         }
         throw new RuntimeException("Erro");
     }
@@ -80,7 +70,7 @@ public class StorageService {
             if (!dto.description().isEmpty() && !dto.description().isBlank()) {
                 storage.get().setDescription(dto.description());
             }
-            return this.mapper.map(this.storageRepository.save(storage.get()), StorageResponse.class);
+            return this.mapper.toResponse(this.storageRepository.save(storage.get()));
         }
         throw new RuntimeException("Erro");
     }

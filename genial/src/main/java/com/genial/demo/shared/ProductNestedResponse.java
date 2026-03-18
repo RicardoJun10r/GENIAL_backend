@@ -1,15 +1,17 @@
 package com.genial.demo.shared;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public record ProductNestedResponse(
         String id,
-        StorageResponse storageResponse,
+        StorageResponse storage,
         String name,
         String description,
         String sector,
-        Double value,
-        LocalDate date,
+        BigDecimal value,
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt,
         Integer quantidade) {
 
 }

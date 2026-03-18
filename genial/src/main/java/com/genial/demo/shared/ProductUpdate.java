@@ -1,13 +1,12 @@
 package com.genial.demo.shared;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 public record ProductUpdate(
         String id,
         String name,
         String description,
         String sector,
-        Double value,
-        LocalDate date,
+        BigDecimal value,
         Integer quantidade) {
 }
