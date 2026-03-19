@@ -10,9 +10,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
-import com.genial.demo.repositories.ProductRepository;
-import com.genial.demo.repositories.StorageRepository;
-import com.genial.demo.repositories.UserRepository;
+import com.genial.demo.modules.app.model.Product;
+import com.genial.demo.modules.app.model.Storage;
+import com.genial.demo.modules.app.model.User;
+import com.genial.demo.modules.app.repositories.ProductRepository;
+import com.genial.demo.modules.app.repositories.StorageRepository;
+import com.genial.demo.modules.app.repositories.UserRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

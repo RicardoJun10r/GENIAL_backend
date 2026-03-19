@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
+import com.genial.demo.modules.app.model.User;
+
 class UserTest {
 
   @Test
