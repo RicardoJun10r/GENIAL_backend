@@ -11,7 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.genial.demo.modules.app.model.User;
 import com.genial.demo.modules.app.repositories.UserRepository;
-import com.genial.demo.modules.app.services.TokenService;
+import com.genial.demo.modules.auth.service.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
