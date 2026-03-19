@@ -30,7 +30,7 @@ services:
     environment:
       # Sobrescreve a URL do banco. 
       # No Docker, a API não chama o "localhost", ela chama o serviço "db"
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/genial
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/genial
 
 volumes:
   postgres_data:
