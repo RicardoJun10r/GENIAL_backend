@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    # O seu log do Flyway avisou que o suporte testado vai até a versão 17
+    image: postgres:17-alpine
+    container_name: genial_db
+    restart: always
+    env_file:
+      - .env # Lê o DB_USERNAME e DB_PASSWORD direto do seu .env
+    environment:
+      POSTGRES_DB: genial
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: genial_api
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env # Injeta o JWT_SECRET e outras variáveis para o Spring Boot
+    environment:
+      # Sobrescreve a URL do banco. 
+      # No Docker, a API não chama o "localhost", ela chama o serviço "db"
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/genial
+
+volumes:
+  postgres_data:
