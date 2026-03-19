@@ -33,3 +33,10 @@ build/
 ### VS Code ###
 .vscode/
 
+### CODEX ###
+.doc-ai/
+.codex/
+
+### .env ###
+.env/
+
