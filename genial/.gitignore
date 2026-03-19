@@ -38,5 +38,4 @@ build/
 .codex/
 
 ### .env ###
-.env/
-
+.env
